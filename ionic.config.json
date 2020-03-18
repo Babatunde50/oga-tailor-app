@@ -1,0 +1,7 @@
+{
+  "name": "oga-tailor",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
