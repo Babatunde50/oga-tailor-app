@@ -1,6 +1,11 @@
 :root {
-	--ion-toolbar-background: var(--ion-color-primary);
-    --ion-tab-bar-background: var(--ion-color-primary);
-    --ion-tab-bar-color-selected: va(--ion-color-secondary);
+    --ion-toolbar-background: var(--ion-color-primary);
     --ion-toolbar-color: var(--ion-color-primary-contrast);
+    --ion-tab-bar-background: var(--ion-color-dark);
+    --ion-tab-bar-color-selected: var(--ion-color-medium-contrast);
+}
+
+ion-avatar {
+    width: 100%;
+    height: auto;
 }

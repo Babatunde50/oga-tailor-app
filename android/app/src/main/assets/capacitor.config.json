@@ -1,8 +1,25 @@
 {
-  "appId": "io.ionic.starter",
+  "appId": "oga.tailor.app",
   "appName": "oga-tailor",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",
-  "cordova": {}
+  "cordova": {},
+  "plugins": {
+    "GoogleAuth": {
+      "scopes": [
+        "profile",
+        "email"
+      ],
+      "serverClientId": "398388532111-bpotvgm9ah7p75q9jsj5qlipvi80rnub.apps.googleusercontent.com"
+    },
+    "CapacitorFirebaseAuth": {
+      "providers": ["google.com", "twitter.com", "facebook.com", "phone"],
+      "languageCode": "en",
+      "nativeAuth": false,
+      "permissions": {
+           "google": ["profile", "https://www.googleapis.com/auth/drive"]
+       }
+    }
+  }
 }

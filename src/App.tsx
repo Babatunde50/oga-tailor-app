@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import {
-  IonApp,
-  IonRouterOutlet
-} from '@ionic/react';
+import { IonApp, IonRouterOutlet, IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
+import { cutOutline, personCircleOutline, paperPlaneOutline, enterOutline } from 'ionicons/icons';
 
 import Auth from './pages/Auth';
 import Tailors from './pages/Tailors';
+import AuthOptions from './pages/AuthOptions';
+import Profile from './pages/Profile';
+
+import { UserContext } from './providers/UserProvider';
+import { signOut } from './firebase';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -27,22 +30,54 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import './theme/theme.css'
+import './theme/theme.css';
 
-const App: React.FC = () => (
+const App: React.FC = () => {
+	const user = useContext(UserContext);
+	console.log(user);
+	return (
 		<IonApp>
 			<IonReactRouter>
-				<IonRouterOutlet>
-					<Route path="/auth" exact>
-						<Auth />
-					</Route>
-					<Route path="/" exact>
-						<Tailors />
-					</Route>
-              	<Redirect to="/" />
-			</IonRouterOutlet>
+				<IonTabs>
+					<IonRouterOutlet>
+						<Route path="/tailors" exact>
+							<Tailors />
+						</Route>
+						<Route path="/profile" exact>
+							<Profile />
+						</Route>
+						<Route path="/auth/email" exact>
+							<Auth />
+						</Route>
+						<Route path="/auth" exact>
+							<AuthOptions />
+						</Route>
+						<Redirect path="/" to="/tailors" exact />
+					</IonRouterOutlet>
+					<IonTabBar slot="bottom">
+						<IonTabButton tab="tailors" href="/tailors">
+							<IonIcon icon={cutOutline} />
+							<IonLabel>Tailors</IonLabel>
+						</IonTabButton>
+						<IonTabButton tab="designs" onClick={signOut}>
+							<IonIcon icon={paperPlaneOutline} />
+							<IonLabel>Designs</IonLabel>
+						</IonTabButton>
+						<IonTabButton tab="account" href="/profile">
+						<IonIcon icon={personCircleOutline} />
+						<IonLabel>Account</IonLabel>
+					</IonTabButton>
+						{!user && (
+							<IonTabButton tab="account" href="/auth">
+								<IonIcon icon={enterOutline} />
+								<IonLabel>Sign Up</IonLabel>
+							</IonTabButton>
+						)}
+					</IonTabBar>
+				</IonTabs>
 			</IonReactRouter>
 		</IonApp>
-);
+	);
+};
 
 export default App;
