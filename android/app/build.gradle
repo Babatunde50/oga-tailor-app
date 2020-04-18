@@ -1,10 +1,9 @@
 apply plugin: 'com.android.application'
-implementation 'com.facebook.android:facebook-android-sdk:4.41.0'
 
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "io.ionic.starter"
+        applicationId "oga.tailor.app"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
@@ -16,10 +15,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 

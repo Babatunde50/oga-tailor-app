@@ -8,6 +8,7 @@ import Auth from './pages/Auth';
 import Tailors from './pages/Tailors';
 import AuthOptions from './pages/AuthOptions';
 import Profile from './pages/Profile';
+import TailorSignUp from './pages/TailorSigUp';
 
 import { UserContext } from './providers/UserProvider';
 import { signOut } from './firebase';
@@ -52,6 +53,9 @@ const App: React.FC = () => {
 						<Route path="/auth" exact>
 							<AuthOptions />
 						</Route>
+						<Route path="/tailor-signup" exact>
+							<TailorSignUp />
+						</Route>
 						<Redirect path="/" to="/tailors" exact />
 					</IonRouterOutlet>
 					<IonTabBar slot="bottom">
@@ -68,7 +72,7 @@ const App: React.FC = () => {
 						<IonLabel>Account</IonLabel>
 					</IonTabButton>
 						{!user && (
-							<IonTabButton tab="account" href="/auth">
+							<IonTabButton tab="auth" href="/auth">
 								<IonIcon icon={enterOutline} />
 								<IonLabel>Sign Up</IonLabel>
 							</IonTabButton>

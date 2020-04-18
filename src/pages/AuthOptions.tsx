@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import { IonPage, IonContent, IonGrid, IonRow, IonCol, IonButton, IonIcon, IonSpinner, IonAlert } from '@ionic/react';
 import { mail, logoGoogle, logoFacebook } from 'ionicons/icons';
 import { isPlatform } from '@ionic/react';
-import { cfaSignIn } from 'capacitor-firebase-auth';
 
 import { User } from 'firebase/app';
 
@@ -20,40 +19,32 @@ const AuthOptions: React.FC = () => {
 	const history = useHistory();
 	const signInWithGg = async () => {
 		setShowLoadingGG(true);
-		if (isPlatform('android')) {
-			console.log(isPlatform('android'));
-			cfaSignIn('google.com').subscribe((user: User) => console.log(user));
-		} else {
-			let user;
-			try {
-				user = await signInWithGoogle();
-				if (user) {
-					setShowLoadingGG(false);
-					history.replace('/profile');
-				}
-			} catch (err) {
-				setErrorMessage(err.message);
+		let user;
+		try {
+			user = await signInWithGoogle();
+			if (user) {
 				setShowLoadingGG(false);
-				setShowErrorAlert(true);
+				history.replace('/profile');
 			}
+		} catch (err) {
+			setErrorMessage(err.message);
+			setShowLoadingGG(false);
+			setShowErrorAlert(true);
 		}
 	};
+
 	const signInWithFB = async () => {
-		if (isPlatform('android')) {
-			cfaSignIn('facebook.com').subscribe((user: User) => console.log(user));
-		} else {
-			let user;
-			try {
-				user = await signInWithFacebook();
-				if (user) {
-					setShowLoadingFB(false);
-					history.replace('/profile');
-				}
-			} catch (err) {
-				setErrorMessage(err.message);
+		let user;
+		try {
+			user = await signInWithFacebook();
+			if (user) {
 				setShowLoadingFB(false);
-				setShowErrorAlert(true);
+				history.replace('/profile');
 			}
+		} catch (err) {
+			setErrorMessage(err.message);
+			setShowLoadingFB(false);
+			setShowErrorAlert(true);
 		}
 	};
 	return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-	IonApp,
+	IonPage,
 	IonGrid,
 	IonHeader,
 	IonContent,
@@ -11,12 +11,16 @@ import {
 	IonCol,
 	IonText,
 	IonIcon,
+	IonItem,
+	IonLabel,
 } from '@ionic/react';
+import { useHistory } from 'react-router-dom';
 import { mail } from 'ionicons/icons';
 
 const Profile: React.FC = () => {
+	const history = useHistory();
 	return (
-		<IonApp>
+		<IonPage>
 			<IonHeader>
 				<IonToolbar>
 					<IonTitle slot="start">My Navigation Bar</IonTitle>
@@ -43,17 +47,50 @@ const Profile: React.FC = () => {
 							</h4>
 						</IonCol>
 					</IonRow>
+					<IonItem onClick={() => history.push("/tailor-signup")} lines="none">
+						<IonLabel>
+							<IonText color="primary">
+								<p style={{ textAlign: 'center', fontWeight: 'bolder' }}> Become a Tailor </p>
+							</IonText>
+						</IonLabel>
+					</IonItem>
+					<p>Measurements</p>
+					<IonItem href="#" detail>
+						<IonLabel> Item with Detail Arrow</IonLabel>
+					</IonItem>
+					<IonItem href="#" detail>
+						<IonLabel> Item with Detail Arrow</IonLabel>
+					</IonItem>
+					<p>Measurements</p>
+					<IonItem href="#" detail>
+						<IonLabel> Item with Detail Arrow</IonLabel>
+					</IonItem>
+					<IonItem href="#" detail>
+						<IonLabel> Item with Detail Arrow</IonLabel>
+					</IonItem>
+					<p>Measurements</p>
+					<IonItem href="#" detail>
+						<IonLabel> Item with Detail Arrow</IonLabel>
+					</IonItem>
+					<IonItem href="#" detail>
+						<IonLabel> Item with Detail Arrow</IonLabel>
+					</IonItem>
+					<IonItem href="#" detail>
+						<IonLabel> Item with Detail Arrow</IonLabel>
+					</IonItem>
+					<IonItem href="#" detail>
+						<IonLabel> Item with Detail Arrow</IonLabel>
+					</IonItem>
 					<IonRow>
 						<IonCol>
 							<IonText color="primary">
-								<p style={{ textAlign: 'center', fontWeight: 'bold' }}>Become a Tailor</p>
+								<p style={{ textAlign: 'center', fontWeight: 'bold' }}>Sign out</p>
 							</IonText>
 						</IonCol>
 					</IonRow>
-					<IonRow></IonRow>
 				</IonGrid>
 			</IonContent>
-		</IonApp>
+		</IonPage>
 	);
 };
 

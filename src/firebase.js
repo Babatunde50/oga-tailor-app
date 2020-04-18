@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
+import 'firebase/storage';
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyD4ghuxRKocYVVuPEJ4gU1Qy24jPm5WbZ8',
@@ -18,6 +19,7 @@ firebase.initializeApp(firebaseConfig);
 
 export const firestore = firebase.firestore();
 export const auth = firebase.auth();
+export const storage = firebase.storage();
 
 // setting up google sign in and sign out
 export const googleProvider = new firebase.auth.GoogleAuthProvider();
@@ -26,7 +28,6 @@ export const signInWithGoogle = () => auth.signInWithPopup(googleProvider);
 // setting up facebook sign in
 export const facebookProvider = new firebase.auth.FacebookAuthProvider();
 export const signInWithFacebook = () => auth.signInWithPopup(facebookProvider);
-
 
 // sign out
 export const signOut = () => auth.signOut();
@@ -59,7 +60,7 @@ export const createUserProfileDocument = async (user, additionalData) => {
 	return getUserDocument(user.uid);
 };
 
-export const getUserDocument = async uid => {
+export const getUserDocument = async (uid) => {
 	if (!uid) return null;
 	try {
 		return firestore.collection(`users`).doc(uid);
