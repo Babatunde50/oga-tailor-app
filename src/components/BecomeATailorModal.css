@@ -1,0 +1,30 @@
+.image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+
+}
+
+.image-preview {
+  width: 150px;
+  max-width: 100%;
+  height: 150px;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  margin-bottom: .5rem;
+}
+
+.image-preview h3 {
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

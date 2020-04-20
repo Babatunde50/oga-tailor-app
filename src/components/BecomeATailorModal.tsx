@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import 'react-phone-number-input/style.css';
-import PhoneInput from 'react-phone-number-input';
+import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
 import {
 	IonHeader,
 	IonContent,
@@ -18,21 +18,60 @@ import {
 	IonLabel,
 	IonInput,
 	IonText,
+	IonAlert,
 } from '@ionic/react';
 import { close, camera } from 'ionicons/icons';
 import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
 
-import { storage } from '../firebase';
+import { storage, firestore } from '../firebase';
+import { getCoordsForAddress } from '../utils/location';
+
+import './BecomeATailorModal.css';
+import { UserContext } from '../providers/UserProvider';
 
 const { Camera } = Plugins;
 
+interface inputs {
+	name: string;
+	street: string;
+	number: number | null;
+	country: string;
+	city: string;
+}
+
 const BecomeATailorModal: React.FC<{ showModal: boolean; closeModal: () => void }> = ({ showModal, closeModal }) => {
-	const [takenPhoto, setTakenPhoto] = useState<{ path: string | undefined; preview: string }>({
-		path: '',
+	const user: { uid: string; name: string; email: string } | null = useContext(UserContext);
+	const [takenPhoto, setTakenPhoto] = useState<{ path: undefined | File; preview: string }>({
+		path: undefined,
 		preview: '',
 	});
-	const [value, setValue] = useState();
-	const profileRef = storage.ref().child('profile');
+	console.log(user, 'USer');
+	const [telephone, setTelephone] = useState();
+	const [inputValues, setInputValues] = useState<inputs>({ name: '', street: '', number: null, country: '', city: '' });
+	const [errorMessage, setErrorMessage] = useState<string>('');
+	const profileRef = storage.ref();
+	const filePickerRef = useRef<HTMLInputElement>(null);
+	const openFilePicker = () => {
+		filePickerRef.current!.click();
+	};
+
+	const inputValuesHandler = (event: any) => {
+		const { name, value } = event.target;
+		setInputValues((inputValues) => ({ ...inputValues, [name]: value }));
+	};
+
+	const pickFileHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target!.files![0];
+		const fr = new FileReader();
+		fr.onload = () => {
+			console.log(fr.result!.toString());
+			setTakenPhoto({
+				path: file,
+				preview: fr.result!.toString(),
+			});
+		};
+		fr.readAsDataURL(file);
+	};
 	const takePhotoHandler = async () => {
 		const image = await Camera.getPhoto({
 			quality: 90,
@@ -43,10 +82,55 @@ const BecomeATailorModal: React.FC<{ showModal: boolean; closeModal: () => void 
 		if (!image || !image.webPath) return;
 		console.log(image);
 		setTakenPhoto({
-			path: image.path,
+			path: undefined,
 			preview: image.webPath,
 		});
-		console.log(takenPhoto);
+	};
+	const submitDataHandler = async (event: React.FormEvent) => {
+		event.preventDefault();
+		console.log(isValidPhoneNumber(telephone));
+		if (!isValidPhoneNumber(telephone)) {
+			setErrorMessage('Invalid mobile number');
+			return;
+		}
+		if (!takenPhoto.preview) {
+			setErrorMessage("Please upload your company's photo");
+			return;
+		}
+		try {
+			let file;
+			if (!takenPhoto.path) {
+				file = await fetch(takenPhoto.preview).then((r) => r.blob());
+			} else {
+				file = takenPhoto.path;
+			}
+			await profileRef.child(`tailors-logos/${user!.uid}`).put(file);
+			const photoURL = await profileRef.child(`tailors-logos/${user!.uid}`).getDownloadURL();
+			const { number, street, country, city, name } = inputValues;
+			const coordinates = await getCoordsForAddress(`${number}, ${street}, ${city}, ${country}.`);
+			firestore
+				.collection('users')
+				.doc(user!.uid)
+				.set(
+					{
+						type: 'tailor',
+						companyLogoURL: photoURL,
+						telephone: telephone,
+						companyName: name,
+						companyAddress: {
+							buildingNumber: number,
+							street: street,
+							country: country,
+							city: city,
+						},
+						measurements: [],
+						coordinates: coordinates,
+					},
+					{ merge: true }
+				);
+		} catch (err) {
+			setErrorMessage(err.message);
+		}
 	};
 	return (
 		<IonModal isOpen={showModal}>
@@ -61,75 +145,81 @@ const BecomeATailorModal: React.FC<{ showModal: boolean; closeModal: () => void 
 				</IonToolbar>
 			</IonHeader>
 			<IonContent>
+				<IonAlert
+					isOpen={!!errorMessage}
+					onDidDismiss={() => setErrorMessage('')}
+					header={'Error'}
+					message={errorMessage}
+					buttons={['OK']}
+				/>
 				<IonGrid>
-					<form>
+					<form onSubmit={submitDataHandler}>
 						<IonList>
 							<IonItem>
 								<IonLabel position="floating">Company's Name</IonLabel>
-								<IonInput inputmode="text" required={true} />
+								<IonInput name="name" inputmode="text" required={true} onIonChange={inputValuesHandler} />
 							</IonItem>
 							<p style={{ paddingLeft: '1rem' }}> Company's Photo </p>
 							<IonItem>
-								<div>
-									<IonButton onClick={takePhotoHandler}>
-										Take Image <IonIcon icon={camera} />{' '}
+								<div className="image-container">
+									<div className="image-preview">
+										{!takenPhoto.preview && <h3>No photo chosen.</h3>}
+										{takenPhoto.preview && <img src={takenPhoto.preview} alt="Preview" />}
+									</div>
+									<IonButton fill="outline" onClick={takePhotoHandler}>
+										{takenPhoto.preview ? 'Retake Image' : 'Take Image'} <IonIcon icon={camera} />
 									</IonButton>
 									<IonText color="primary">
-										<p> upload Image instead ? </p>
+										<p onClick={openFilePicker}> upload Image instead ? </p>
+										<input type="file" hidden ref={filePickerRef} onChange={pickFileHandler} />
 									</IonText>
 								</div>
-								{takenPhoto.preview && <img src={takenPhoto.preview} alt="Company" />}
 							</IonItem>
 							<IonItem>
 								<IonLabel position="floating">Building Number</IonLabel>
-								<IonInput />
+								<IonInput
+									name="number"
+									inputmode="numeric"
+									type="number"
+									required={true}
+									onIonChange={inputValuesHandler}
+								/>
 							</IonItem>
 							<IonItem>
 								<IonLabel position="floating">Street Name</IonLabel>
-								<IonInput inputmode="text" />
+								<IonInput name="street" inputmode="text" required={true} onIonChange={inputValuesHandler} />
 							</IonItem>
 							<IonItem>
 								<IonLabel position="floating">City</IonLabel>
-								<IonInput />
+								<IonInput name="city" inputMode="text" required={true} onIonChange={inputValuesHandler} />
 							</IonItem>
 							<IonItem>
 								<IonLabel position="floating">Country</IonLabel>
-								<IonInput />
+								<IonInput name="country" inputMode="text" required={true} onIonChange={inputValuesHandler} />
 							</IonItem>
 						</IonList>
 						<IonRow>
 							<IonCol>
 								<div style={{ padding: '1rem 0' }}>
-									<PhoneInput defaultCountry="NG" placeholder="Enter phone number" value={value} onChange={setValue} />
+									<PhoneInput
+										defaultCountry="NG"
+										placeholder="Enter phone number"
+										value={telephone}
+										onChange={setTelephone}
+									/>
 								</div>
 							</IonCol>
 						</IonRow>
 						<IonRow>
 							<IonCol>
 								<div style={{ padding: '1rem 0' }}>
-									<IonButton expand="block" size="large">
+									<IonButton expand="block" size="large" type="submit">
 										Submit
 									</IonButton>
 								</div>
 							</IonCol>
 						</IonRow>
 					</form>
-					{/* <IonButton
-						onClick={async () => {
-							const blob = await fetch(takenPhoto.preview).then((r) => r.blob());
-							profileRef
-								.put(blob)
-								.then(function (snapshot) {
-									console.log('Uploaded a blob or file!');
-									console.log(snapshot);
-								})
-								.catch((err: any) => {
-									console.log(err);
-								});
-						}}
-					>
-						Upload Image
-					</IonButton> */}
 				</IonGrid>
 			</IonContent>
 		</IonModal>
