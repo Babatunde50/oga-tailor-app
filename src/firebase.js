@@ -50,6 +50,7 @@ export const createUserProfileDocument = async (user, additionalData) => {
 				email,
 				photoURL,
 				createdAt,
+				type: 'user',
 				...additionalData,
 			});
 		} catch (err) {

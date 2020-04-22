@@ -18,11 +18,17 @@ import {
 	IonCardHeader,
 	IonIcon,
 	IonCardContent,
-    IonChip,
-    IonFab,
-    IonFabButton
+	IonChip,
+	IonFab,
+	IonFabButton,
 } from '@ionic/react';
 import { star, call, mail, helpCircleOutline, cutOutline } from 'ionicons/icons';
+import { Plugins } from '@capacitor/core';
+import distanceFrom from '../utils/distance';
+
+import { firestore } from '../firebase';
+
+const { Geolocation } = Plugins;
 
 const Tailors: React.FC = () => {
 	const [tailorType, setTailorType] = useState<string>('nearYou');
@@ -35,9 +41,30 @@ const Tailors: React.FC = () => {
 		console.log(event.type);
 		setSearchName(event.detail.value);
 	};
+	const getCurrentPosition = async () => {
+		const coordinates: any = await Geolocation.getCurrentPosition();
+		console.log(coordinates)
+		return { lat: coordinates.coords.latitude, lng: coordinates.coords.longitude };
+	};
+	const fetchTailors = async () => {
+		const querySnapshot = await firestore.collection('users').where('type', '==', 'tailor').get();
+		const myPostion = await getCurrentPosition();
+		querySnapshot.forEach(function (doc) {
+			const data: any = {
+				...doc.data(),
+				id: doc.id,
+			};
+			console.log(distanceFrom([data.coordinates.lat, data.coordinates.lng], [ myPostion.lat, myPostion.lng ]));
+		});
+	};
+
 	useEffect(() => {
 		console.log(tailorType);
 	}, [tailorType]);
+	useEffect(() => {
+		getCurrentPosition();
+		fetchTailors();
+	}, []);
 	return (
 		<IonPage>
 			<IonHeader>
@@ -51,7 +78,7 @@ const Tailors: React.FC = () => {
 						<IonIcon icon={cutOutline} />
 					</IonFabButton>
 				</IonFab>
-				<IonSegment onIonChange={tailorTypeHandler} value={tailorType}> 
+				<IonSegment onIonChange={tailorTypeHandler} value={tailorType}>
 					<IonSegmentButton value="nearYou">
 						<IonLabel>Near You</IonLabel>
 					</IonSegmentButton>

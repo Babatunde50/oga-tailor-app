@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { cutOutline, personCircleOutline, paperPlaneOutline, enterOutline } from 'ionicons/icons';
+import { peopleOutline, personCircleOutline, paperPlaneOutline, enterOutline } from 'ionicons/icons';
 
 import Auth from './pages/Auth';
 import Tailors from './pages/Tailors';
@@ -35,7 +35,14 @@ import './theme/theme.css';
 
 const App: React.FC = () => {
 	const user = useContext(UserContext);
-	console.log(user);
+	function PrivateRoute(props: any) {
+		const { children, ...rest } = props;
+		return <Route {...rest} render={({ location }) => (!!user ? children : <Redirect to="/auth" />)} />;
+	}
+	function UnAuthRoute(props: any) {
+		const { children, ...rest } = props;
+		return <Route {...rest} render={({ location }) => (!user ? children : <Redirect to="/tailors" />)} />;
+	}
 	return (
 		<IonApp>
 			<IonReactRouter>
@@ -44,23 +51,24 @@ const App: React.FC = () => {
 						<Route path="/tailors" exact>
 							<Tailors />
 						</Route>
-						<Route path="/profile" exact>
+						<PrivateRoute path="/profile" exact>
 							<Profile />
-						</Route>
-						<Route path="/auth/email" exact>
+						</PrivateRoute>
+						<UnAuthRoute path="/auth/email" exact>
 							<Auth />
-						</Route>
-						<Route path="/auth" exact>
+						</UnAuthRoute>
+						<UnAuthRoute path="/auth" exact>
 							<AuthOptions />
-						</Route>
-						<Route path="/tailor-signup" exact>
+						</UnAuthRoute>
+						<PrivateRoute path="/tailor-signup" exact>
 							<TailorSignUp />
-						</Route>
+						</PrivateRoute>
 						<Redirect path="/" to="/tailors" exact />
+						<Redirect to="/auth" exact />
 					</IonRouterOutlet>
 					<IonTabBar slot="bottom">
 						<IonTabButton tab="tailors" href="/tailors">
-							<IonIcon icon={cutOutline} />
+							<IonIcon icon={peopleOutline} />
 							<IonLabel>Tailors</IonLabel>
 						</IonTabButton>
 						<IonTabButton tab="designs" onClick={signOut}>
@@ -68,9 +76,9 @@ const App: React.FC = () => {
 							<IonLabel>Designs</IonLabel>
 						</IonTabButton>
 						<IonTabButton tab="account" href="/profile">
-						<IonIcon icon={personCircleOutline} />
-						<IonLabel>Account</IonLabel>
-					</IonTabButton>
+							<IonIcon icon={personCircleOutline} />
+							<IonLabel>Account</IonLabel>
+						</IonTabButton>
 						{!user && (
 							<IonTabButton tab="auth" href="/auth">
 								<IonIcon icon={enterOutline} />

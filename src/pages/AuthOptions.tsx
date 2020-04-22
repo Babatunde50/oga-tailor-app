@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IonPage, IonContent, IonGrid, IonRow, IonCol, IonButton, IonIcon, IonSpinner, IonAlert } from '@ionic/react';
 import { mail, logoGoogle, logoFacebook } from 'ionicons/icons';
-import { isPlatform } from '@ionic/react';
-
-import { User } from 'firebase/app';
 
 import { signInWithFacebook, signInWithGoogle } from '../firebase';
 
@@ -19,13 +16,10 @@ const AuthOptions: React.FC = () => {
 	const history = useHistory();
 	const signInWithGg = async () => {
 		setShowLoadingGG(true);
-		let user;
 		try {
-			user = await signInWithGoogle();
-			if (user) {
-				setShowLoadingGG(false);
-				history.replace('/profile');
-			}
+			await signInWithGoogle();
+			setShowLoadingGG(false);
+			history.replace('/tailors');
 		} catch (err) {
 			setErrorMessage(err.message);
 			setShowLoadingGG(false);
@@ -34,13 +28,10 @@ const AuthOptions: React.FC = () => {
 	};
 
 	const signInWithFB = async () => {
-		let user;
 		try {
-			user = await signInWithFacebook();
-			if (user) {
-				setShowLoadingFB(false);
-				history.replace('/profile');
-			}
+			await signInWithFacebook();
+			setShowLoadingFB(false);
+			history.replace('/tailors');
 		} catch (err) {
 			setErrorMessage(err.message);
 			setShowLoadingFB(false);

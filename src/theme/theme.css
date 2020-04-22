@@ -10,26 +10,6 @@ ion-avatar {
 	height: auto;
 }
 
-.bg-tailor-signup {
-	width: 100vw;
-	height: 50vh;
-	position: relative;
-	background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-		url('https://images.unsplash.com/photo-1524224971825-8c690dec4b7c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80');
-	background-position: center;
-	color: white;
-}
-
-.bg-tailor-signup .content {
-	position: absolute;
-	top: 35%;
-	padding: 0.65rem;
-}
-
-.bg-tailor-signup .content ion-button {
-	text-transform: none;
-}
-
 .PhoneInputInput {
 	border: 0;
 	border-bottom: 2px solid var(--ion-color-primary);
@@ -38,7 +18,7 @@ ion-avatar {
 }
 
 ion-slides {
-	--bullet-background: yellow !important;
-	--bullet-background-active: var(--ion-color-primary) !important;
+	--bullet-background: #ccc !important;
+	--bullet-background-active: #5d5d5d !important;
 	--progress-bar-background: black;
 }

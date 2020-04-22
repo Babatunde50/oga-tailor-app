@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
 	IonPage,
 	IonGrid,
@@ -17,74 +17,80 @@ import {
 import { useHistory } from 'react-router-dom';
 import { mail } from 'ionicons/icons';
 
+import { UserContext } from '../providers/UserProvider';
+import { signOut } from '../firebase';
+import './Profile.css';
+
 const Profile: React.FC = () => {
 	const history = useHistory();
+	const user: any = useContext(UserContext);
+	console.log(user);
 	return (
 		<IonPage>
 			<IonHeader>
 				<IonToolbar>
-					<IonTitle slot="start">My Navigation Bar</IonTitle>
+					<IonTitle>My Navigation Bar</IonTitle>
 				</IonToolbar>
 			</IonHeader>
 			<IonContent>
 				<IonGrid>
 					<IonRow>
-						<IonCol size="6" offset="3">
-							<IonAvatar>
+						<IonCol size="6" offset="4">
+							<IonAvatar className="img-tailor">
 								<img
-									src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=80"
-									alt="baba"
+									src={user && user.type === 'tailor' ? user.companyLogoURL : user.photoURL}
+									alt={user && user.displayName}
 								/>
 							</IonAvatar>
 						</IonCol>
 					</IonRow>
 					<IonRow>
 						<IonCol>
-							<h3 style={{ textAlign: 'center', marginBottom: 0, marginTop: '.3rem' }}>Babatunde Ololade</h3>
-							<h4 style={{ textAlign: 'center', marginTop: '.2rem' }}>
-								{' '}
-								<IonIcon color="primary" icon={mail} /> babatundeoladele@dele.com{' '}
+							<h3 className="profile-name">{user && user.type === 'tailor' ? user.companyName : user.displayName}</h3>
+							<h4 className="profile-email">
+								<IonIcon color="primary" icon={mail} /> {user.email}
 							</h4>
 						</IonCol>
 					</IonRow>
-					<IonItem onClick={() => history.push("/tailor-signup")} lines="none">
-						<IonLabel>
-							<IonText color="primary">
-								<p style={{ textAlign: 'center', fontWeight: 'bolder' }}> Become a Tailor </p>
-							</IonText>
-						</IonLabel>
-					</IonItem>
-					<p>Measurements</p>
+					{user && user.type !== 'tailor' && (
+						<IonItem onClick={() => history.push('/tailor-signup')} lines="none">
+							<IonLabel>
+								<IonText color="primary">
+									<p className="profile-tailor__signup"> Become a Tailor </p>
+								</IonText>
+							</IonLabel>
+						</IonItem>
+					)}
+					<p className="profile-section__title">Measurements</p>
+					{user && user.type === 'tailor' && (
+						<IonItem href="#" detail>
+							<IonLabel> Customer's Measurements</IonLabel>
+						</IonItem>
+					)}
 					<IonItem href="#" detail>
-						<IonLabel> Item with Detail Arrow</IonLabel>
+						<IonLabel> Your Measurement </IonLabel>
 					</IonItem>
+					<p className="profile-section__title">Account Settings</p>
 					<IonItem href="#" detail>
-						<IonLabel> Item with Detail Arrow</IonLabel>
-					</IonItem>
-					<p>Measurements</p>
-					<IonItem href="#" detail>
-						<IonLabel> Item with Detail Arrow</IonLabel>
-					</IonItem>
-					<IonItem href="#" detail>
-						<IonLabel> Item with Detail Arrow</IonLabel>
-					</IonItem>
-					<p>Measurements</p>
-					<IonItem href="#" detail>
-						<IonLabel> Item with Detail Arrow</IonLabel>
+						<IonLabel> Account security </IonLabel>
 					</IonItem>
 					<IonItem href="#" detail>
-						<IonLabel> Item with Detail Arrow</IonLabel>
+						<IonLabel> Email Notification preferences </IonLabel>
+					</IonItem>
+					<p className="profile-section__title">Support</p>
+					<IonItem href="#" detail>
+						<IonLabel> About ogaTailor </IonLabel>
 					</IonItem>
 					<IonItem href="#" detail>
-						<IonLabel> Item with Detail Arrow</IonLabel>
+						<IonLabel> Frequently asked question </IonLabel>
 					</IonItem>
 					<IonItem href="#" detail>
-						<IonLabel> Item with Detail Arrow</IonLabel>
+						<IonLabel> Share the ogaTailor app </IonLabel>
 					</IonItem>
 					<IonRow>
 						<IonCol>
-							<IonText color="primary">
-								<p style={{ textAlign: 'center', fontWeight: 'bold' }}>Sign out</p>
+							<IonText color="primary" onClick={signOut}>
+								<p className="profile__signout">Sign out</p>
 							</IonText>
 						</IonCol>
 					</IonRow>

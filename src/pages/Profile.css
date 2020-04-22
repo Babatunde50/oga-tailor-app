@@ -1,0 +1,27 @@
+.profile-name {
+	text-align: center;
+	margin-bottom: 0;
+	margin-top: 0.3rem;
+}
+
+.profile-email {
+	text-align: center;
+	margin-top: 0.2rem;
+}
+
+.profile-tailor__signup {
+	text-align: center;
+	font-weight: bolder;
+}
+
+.profile-section__title {
+	padding: 0 1.2rem;
+	font-size: 0.8rem;
+	margin-bottom: -1px;
+	color: rgba(0, 0, 0, 0.5);
+}
+
+.profile__signout {
+	text-align: center;
+	font-weight: bold;
+}
