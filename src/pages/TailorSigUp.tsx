@@ -100,7 +100,7 @@ const TailorSignUp: React.FC = () => {
 						</IonCol>
 					</IonRow>
 					<IonRow>
-						<IonSlides pager={true}>
+						<IonSlides pager={true} options={slideOpts}>
 							<IonSlide>
 								<IonCard>
 									<IonCardContent>
@@ -112,7 +112,7 @@ const TailorSignUp: React.FC = () => {
 										<IonRow>
 											<IonCol size="5">
 												<IonAvatar className="img-tailor">
-													<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80" />
+													<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80" alt="testimony" />
 												</IonAvatar>
 											</IonCol>
 											<IonCol>
@@ -134,7 +134,7 @@ const TailorSignUp: React.FC = () => {
 										<IonRow>
 											<IonCol size="5">
 												<IonAvatar className="img-tailor">
-													<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80" />
+													<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80" alt="testimony" />
 												</IonAvatar>
 											</IonCol>
 											<IonCol>
@@ -156,7 +156,7 @@ const TailorSignUp: React.FC = () => {
 										<IonRow>
 											<IonCol size="5">
 												<IonAvatar className="img-tailor">
-													<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80" />
+													<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80" alt="testimony" />
 												</IonAvatar>
 											</IonCol>
 											<IonCol>
