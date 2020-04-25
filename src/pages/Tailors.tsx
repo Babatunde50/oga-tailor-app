@@ -16,6 +16,7 @@ import {
 	IonFab,
 	IonFabButton,
 	IonSpinner,
+	IonAlert,
 } from '@ionic/react';
 import { cutOutline } from 'ionicons/icons';
 import { Plugins } from '@capacitor/core';
@@ -23,6 +24,7 @@ import debounce from 'lodash.debounce';
 
 import distanceFrom from '../utils/distance';
 import TailorCard from '../components/TailorCard';
+import usePagination from 'firestore-pagination-hook';
 
 import { firestore } from '../firebase';
 
@@ -31,86 +33,48 @@ const { Geolocation } = Plugins;
 const Tailors: React.FC = () => {
 	const [tailorType, setTailorType] = useState<string>('nearYou');
 	const [searchName, setSearchName] = useState<string>('');
-	const [tailors, setTailors] = useState<any>([]);
+	const { loading, loadingError, loadingMore, loadingMoreError, hasMore, items, loadMore } = usePagination(
+		firestore.collection('users').where('type', '==', 'tailor'),
+		{
+			limit: 3,
+		}
+	);
 	const [error, setError] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
-	const [hasMore, setHasMore] = useState(true);
-	const [paginate, setPaginate] = useState(0);
 
-	console.log(tailors);
+	useEffect(() => {
+		if (items.length === 0 && !loading) {
+			setError(true);
+		}
+	}, [loadingError, items]);
+
 	const tailorTypeHandler = (event: any) => {
-		console.log(event.type);
 		setTailorType(event.detail.value);
 	};
 	const searchTailorHandler = (event: any) => {
-		console.log(event.type);
 		setSearchName(event.detail.value);
 	};
 	const getCurrentPosition = async () => {
 		const coordinates: any = await Geolocation.getCurrentPosition();
-		console.log(coordinates);
 		return { lat: coordinates.coords.latitude, lng: coordinates.coords.longitude };
 	};
 
-	const fetchTailors = useCallback(async () => {
-		setIsLoading(true);
-		setError(false);
-		try {
-			const fetchedTailors: any = [];
-			const querySnapshot: any = await firestore
-				.collection('users')
-				// .where('type', '==', 'tailor')
-				.orderBy('displayName', 'asc')
-				.startAfter(paginate * 3)
-				.limit(3)
-				.get();
-			const currentPosition = await getCurrentPosition();
-			if (querySnapshot.length <= 0) {
-				setHasMore(false);
-				return;
-			}
-			querySnapshot.forEach(function (doc: { data: () => any; id: any }) {
-				const data: any = {
-					...doc.data(),
-					id: doc.id,
-				};
-				// data['distance'] = distanceFrom(
-				// 	[data.coordinates.lat, data.coordinates.lng],
-				// 	[currentPosition.lat, currentPosition.lng]
-				// );
-				fetchedTailors.push(data);
-			});
-			setIsLoading(false);
-			setTailors((prev: any) => [...prev, ...fetchedTailors]);
-			setPaginate((pag) => pag++);
-		} catch (err) {
-			console.log(err.message);
-			setError(true);
-			setIsLoading(false);
-		}
-	}, [setTailors, paginate, setIsLoading]);
+	const handleScroll = debounce(async (e: any) => {
+		const scrollElement = await e.target.getScrollElement();
 
-	const handleScroll = debounce((e: any) => {
-		console.log('Access');
-		console.log(error, isLoading, hasMore);
-		if (error || isLoading || !hasMore) return;
+		if (error || loading || !hasMore) return;
 
-		// Checks that the page has scrolled to the bottom
-		let element = e.target
-		if (element.scrollHeight - element.scrollTop === element.clientHeight) {
-		  // do something at end of scroll
-		  fetchTailors();
-			console.log('BOTTON');
+		if (scrollElement.scrollHeight - scrollElement.scrollTop === scrollElement.clientHeight) {
+			loadMore();
 		}
 	}, 100);
 
-	useEffect(() => {
-		console.log(tailorType);
-	}, [tailorType]);
-	useEffect(() => {
-		getCurrentPosition();
-		fetchTailors();
-	}, [fetchTailors]);
+	const tailors = items.map(function (doc) {
+		// do some stuffs;
+		return {
+			id: doc.id,
+			...doc.data(),
+		};
+	});
 
 	return (
 		<IonPage>
@@ -119,7 +83,7 @@ const Tailors: React.FC = () => {
 					<IonTitle>Our Tailors</IonTitle>
 				</IonToolbar>
 			</IonHeader>
-			<IonContent scroll-events={true} onIonScroll={() => console.log('scrolling')}>
+			<IonContent scrollEvents={true} onIonScroll={handleScroll} style={{ overflow: 'scroll' }}>
 				<IonFab vertical="bottom" horizontal="end" slot="fixed">
 					<IonFabButton>
 						<IonIcon icon={cutOutline} />
@@ -142,13 +106,29 @@ const Tailors: React.FC = () => {
 							<IonSearchbar animated={true} value={searchName} onIonChange={searchTailorHandler}></IonSearchbar>
 						</IonCol>
 					</IonRow>
-					{isLoading && paginate === 0 && <IonSpinner color="primary" />}
+					{loading && (
+						<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+							<IonSpinner color="primary" name="crescent" />
+						</div>
+					)}
 					{tailors.map((tailor: any) => (
 						<IonRow key={tailor.id}>
 							<TailorCard {...tailor} />
 						</IonRow>
 					))}
+					{loadingMore && (
+						<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+							<IonSpinner color="primary" name="crescent" />
+						</div>
+					)}
 				</IonGrid>
+				<IonAlert
+					isOpen={error}
+					onDidDismiss={() => setError(false)}
+					header={'Error'}
+					message={'Failed to get document because the client is offline'}
+					buttons={['OK']}
+				/>
 			</IonContent>
 		</IonPage>
 	);

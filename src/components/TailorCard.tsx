@@ -15,7 +15,7 @@ import { star, call, mail, helpCircleOutline } from 'ionicons/icons';
 import './TailorCard.css';
 
 const TailorCard: React.FC = (props: any) => {
-    console.log(props)
+    // console.log(props)
 	return (
 		<IonCol size-md="6" offset-md="3">
 			<IonCard>

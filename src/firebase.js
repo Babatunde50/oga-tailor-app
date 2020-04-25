@@ -32,6 +32,9 @@ export const signInWithFacebook = () => auth.signInWithPopup(facebookProvider);
 // sign out
 export const signOut = () => auth.signOut();
 
+// paginate tailor query
+export const pagTailorsQuery = firestore.collection('users').orderBy('displayName', 'asc').limit(1)
+
 export const createUserProfileDocument = async (user, additionalData) => {
 	if (!user) return;
 
