@@ -1,4 +1,6 @@
 import firebase from 'firebase/app';
+import { GeoFirestore } from 'geofirestore';
+import { Plugins } from '@capacitor/core';
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/storage';
@@ -14,12 +16,15 @@ const firebaseConfig = {
 	measurementId: 'G-0JVQEK0SSW',
 };
 
+const { Geolocation } = Plugins;
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
 export const firestore = firebase.firestore();
 export const auth = firebase.auth();
 export const storage = firebase.storage();
+export const geofirestore = new GeoFirestore(firestore);
 
 // setting up google sign in and sign out
 export const googleProvider = new firebase.auth.GoogleAuthProvider();
@@ -33,16 +38,22 @@ export const signInWithFacebook = () => auth.signInWithPopup(facebookProvider);
 export const signOut = () => auth.signOut();
 
 // paginate tailor query
-export const pagTailorsQuery = firestore.collection('users').orderBy('displayName', 'asc').limit(1)
+export const pagTailorsQuery = firestore.collection('users').orderBy('displayName', 'asc').limit(1);
+
+const getCurrentPosition = async () => {
+	const coordinates = await Geolocation.getCurrentPosition();
+	return { lat: coordinates.coords.latitude, lng: coordinates.coords.longitude };
+};
 
 export const createUserProfileDocument = async (user, additionalData) => {
 	if (!user) return;
 
 	// Get a reference to the place in the database where the data exists
-	const userRef = firestore.doc(`users/${user.uid}`);
+	const userRef = geofirestore.collection('users').doc(user.uid);
 
 	// Go and fetch the document from that location
 	const snapshot = await userRef.get();
+	const coords = await getCurrentPosition();
 
 	if (!snapshot.exists) {
 		const { displayName, email, photoURL } = user;
@@ -54,6 +65,7 @@ export const createUserProfileDocument = async (user, additionalData) => {
 				photoURL,
 				createdAt,
 				type: 'user',
+				coordinates: new firebase.firestore.GeoPoint(coords.lat, coords.lng),
 				...additionalData,
 			});
 		} catch (err) {

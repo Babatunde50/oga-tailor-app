@@ -23,7 +23,7 @@ import {
 import { close, camera } from 'ionicons/icons';
 import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
 
-import { storage, firestore } from '../firebase';
+import firebase, { storage, geofirestore } from '../firebase';
 import { getCoordsForAddress } from '../utils/location';
 
 import './BecomeATailorModal.css';
@@ -108,26 +108,24 @@ const BecomeATailorModal: React.FC<{ showModal: boolean; closeModal: () => void 
 			const photoURL = await profileRef.child(`tailors-logos/${user!.uid}`).getDownloadURL();
 			const { number, street, country, city, name } = inputValues;
 			const coordinates = await getCoordsForAddress(`${number}, ${street}, ${city}, ${country}.`);
-			firestore
+
+			await geofirestore
 				.collection('users')
 				.doc(user!.uid)
-				.set(
-					{
-						type: 'tailor',
-						companyLogoURL: photoURL,
-						telephone: telephone,
-						companyName: name,
-						companyAddress: {
-							buildingNumber: number,
-							street: street,
-							country: country,
-							city: city,
-						},
-						measurements: [],
-						coordinates: coordinates,
+				.update({
+					type: 'tailor',
+					companyLogoURL: photoURL,
+					telephone: telephone,
+					companyName: name,
+					companyAddress: {
+						buildingNumber: number,
+						street: street,
+						country: country,
+						city: city,
 					},
-					{ merge: true }
-				);
+					measurements: [],
+					coordinates: new firebase.firestore.GeoPoint(coordinates.lat, coordinates.lng),
+				});
 		} catch (err) {
 			setErrorMessage(err.message);
 		}

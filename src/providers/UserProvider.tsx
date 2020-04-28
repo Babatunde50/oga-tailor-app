@@ -17,6 +17,7 @@ const UserProvider: React.FC = ({ children }) => {
 							uid: snapshot.id,
 							...snapshot.data(),
 						};
+						console.log(newUser, "from userprodiver");
 						setUser(newUser);
 					});
 				}

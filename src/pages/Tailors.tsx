@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	IonPage,
 	IonHeader,
@@ -22,11 +22,12 @@ import { cutOutline } from 'ionicons/icons';
 import { Plugins } from '@capacitor/core';
 import debounce from 'lodash.debounce';
 
-import distanceFrom from '../utils/distance';
+// import distanceFrom from '../utils/distance';
 import TailorCard from '../components/TailorCard';
-import usePagination from 'firestore-pagination-hook';
+// import usePagination from 'firestore-pagination-hook';
 
 import { firestore } from '../firebase';
+import usePagination from '../hooks/firestore-pagination';
 
 const { Geolocation } = Plugins;
 
@@ -42,10 +43,10 @@ const Tailors: React.FC = () => {
 	const [error, setError] = useState(false);
 
 	useEffect(() => {
-		if (items.length === 0 && !loading) {
+		if (loadingError?.message && !loading) {
 			setError(true);
 		}
-	}, [loadingError, items]);
+	}, [loadingError, loading]);
 
 	const tailorTypeHandler = (event: any) => {
 		setTailorType(event.detail.value);
@@ -70,9 +71,14 @@ const Tailors: React.FC = () => {
 
 	const tailors = items.map(function (doc) {
 		// do some stuffs;
+		// const userCoordinate = await getCurrentPosition();
+		const tailorData = doc.data();
+		// const distance = distanceFrom([userCoordinate.lat, userCoordinate.lng], [tailorData.lat, tailorData.lng]);
+		// console.log(distance);
 		return {
 			id: doc.id,
-			...doc.data(),
+			...tailorData,
+			// distance,
 		};
 	});
 
@@ -126,7 +132,7 @@ const Tailors: React.FC = () => {
 					isOpen={error}
 					onDidDismiss={() => setError(false)}
 					header={'Error'}
-					message={'Failed to get document because the client is offline'}
+					message={loadingError?.message}
 					buttons={['OK']}
 				/>
 			</IonContent>

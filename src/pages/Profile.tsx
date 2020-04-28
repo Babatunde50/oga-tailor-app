@@ -21,12 +21,9 @@ import { UserContext } from '../providers/UserProvider';
 import { signOut } from '../firebase';
 import './Profile.css';
 
-console.log(window);
-
 const Profile: React.FC = () => {
 	const history = useHistory();
 	const user: any = useContext(UserContext);
-	console.log(user);
 	return (
 		<IonPage>
 			<IonHeader>
@@ -40,21 +37,23 @@ const Profile: React.FC = () => {
 						<IonCol size="6" offset="4">
 							<IonAvatar className="img-tailor">
 								<img
-									src={user && user.type === 'tailor' ? user.companyLogoURL : user.photoURL}
-									alt={user && user.displayName}
+									src={user.d && user.d.type === 'tailor' ? user.d.companyLogoURL : user.d.photoURL}
+									alt={user.d && user.d.displayName}
 								/>
 							</IonAvatar>
 						</IonCol>
 					</IonRow>
 					<IonRow>
 						<IonCol>
-							<h3 className="profile-name">{user && user.type === 'tailor' ? user.companyName : user.displayName}</h3>
+							<h3 className="profile-name">
+								{user.d && user.d.type === 'tailor' ? user.d.companyName : user.d.displayName}
+							</h3>
 							<h4 className="profile-email">
-								<IonIcon color="primary" icon={mail} /> {user.email}
+								<IonIcon color="primary" icon={mail} /> {user.d.email}
 							</h4>
 						</IonCol>
 					</IonRow>
-					{user && user.type !== 'tailor' && (
+					{user.d && user.d.type !== 'tailor' && (
 						<IonItem onClick={() => history.push('/tailor-signup')} lines="none">
 							<IonLabel>
 								<IonText color="primary">
@@ -64,7 +63,7 @@ const Profile: React.FC = () => {
 						</IonItem>
 					)}
 					<p className="profile-section__title">Measurements</p>
-					{user && user.type === 'tailor' && (
+					{user.d && user.d.type === 'tailor' && (
 						<IonItem href="#" detail>
 							<IonLabel> Customer's Measurements</IonLabel>
 						</IonItem>
@@ -89,216 +88,6 @@ const Profile: React.FC = () => {
 					<IonItem href="#" detail>
 						<IonLabel> Share the ogaTailor app </IonLabel>
 					</IonItem>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonText color="primary" onClick={signOut}>
-								<p className="profile__signout">Sign out</p>
-							</IonText>
-						</IonCol>
-					</IonRow>
 					<IonRow>
 						<IonCol>
 							<IonText color="primary" onClick={signOut}>
