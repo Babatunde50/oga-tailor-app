@@ -37,15 +37,13 @@ export const signInWithFacebook = () => auth.signInWithPopup(facebookProvider);
 // sign out
 export const signOut = () => auth.signOut();
 
-// paginate tailor query
-export const pagTailorsQuery = firestore.collection('users').orderBy('displayName', 'asc').limit(1);
 
 const getCurrentPosition = async () => {
 	const coordinates = await Geolocation.getCurrentPosition();
 	return { lat: coordinates.coords.latitude, lng: coordinates.coords.longitude };
 };
 
-export const createUserProfileDocument = async (user, additionalData) => {
+export const createUserProfileDocument = async (user: any, additionalData: any) => {
 	if (!user) return;
 
 	// Get a reference to the place in the database where the data exists
@@ -76,7 +74,7 @@ export const createUserProfileDocument = async (user, additionalData) => {
 	return getUserDocument(user.uid);
 };
 
-export const getUserDocument = async (uid) => {
+export const getUserDocument = async (uid: any) => {
 	if (!uid) return null;
 	try {
 		return firestore.collection(`users`).doc(uid);

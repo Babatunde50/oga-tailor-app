@@ -45,7 +45,6 @@ const BecomeATailorModal: React.FC<{ showModal: boolean; closeModal: () => void 
 		path: undefined,
 		preview: '',
 	});
-	console.log(user, 'USer');
 	const [telephone, setTelephone] = useState();
 	const [inputValues, setInputValues] = useState<inputs>({ name: '', street: '', number: null, country: '', city: '' });
 	const [errorMessage, setErrorMessage] = useState<string>('');

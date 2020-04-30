@@ -9,6 +9,7 @@ import Tailors from './pages/Tailors';
 import AuthOptions from './pages/AuthOptions';
 import Profile from './pages/Profile';
 import TailorSignUp from './pages/TailorSigUp';
+import TailorDetails from './pages/TailorDetails';
 
 import { UserContext } from './providers/UserProvider';
 import { signOut } from './firebase';
@@ -50,6 +51,9 @@ const App: React.FC = () => {
 					<IonRouterOutlet>
 						<Route path="/tailors" exact>
 							<Tailors />
+						</Route>
+						<Route path="/tailors/:id" exact>
+							<TailorDetails />
 						</Route>
 						<PrivateRoute path="/profile" exact>
 							<Profile />

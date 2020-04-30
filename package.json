@@ -19,7 +19,6 @@
     "@types/react-phone-number-input": "^3.0.3",
     "@types/react-router": "^5.1.4",
     "@types/react-router-dom": "^5.1.3",
-    "capacitor-firebase-auth": "^0.3.0",
     "distance-from": "^1.1.2",
     "firebase": "^7.13.1",
     "firestore-pagination-hook": "^1.0.0",

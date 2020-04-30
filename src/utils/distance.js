@@ -1,3 +1,5 @@
-import distanceFrom from "distance-from";
+import distanceFrom from 'distance-from';
 
-export default (d1, d2) => distanceFrom(d1).to(d2).in('mi')
+const distanceDiff = (d1, d2) => distanceFrom(d1).to(d2).in('mi')
+
+export default distanceDiff;

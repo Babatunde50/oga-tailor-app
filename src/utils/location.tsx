@@ -1,4 +1,4 @@
-export const getCoordsForAddress = async (address) => {
+export const getCoordsForAddress = async (address: any) => {
 	try {
 		const response = await fetch(
 			`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
@@ -22,4 +22,3 @@ export const getCoordsForAddress = async (address) => {
 		console.log(err);
 	}
 };
-

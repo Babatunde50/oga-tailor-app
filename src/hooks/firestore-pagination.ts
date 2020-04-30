@@ -1,11 +1,15 @@
 import { useReducer, useEffect } from 'react';
-import { firestore } from 'firebase';
+import { GeoQuerySnapshot } from 'geofirestore';
+import firebase from 'firebase';
+
+import { geofirestore } from '../firebase';
+import getCurrentPosition from '../utils/getCurrentPosition';
 
 type StateType = {
 	hasMore: boolean;
-	items: firestore.DocumentData[];
-	after: firestore.QueryDocumentSnapshot | null;
-	lastLoaded: firestore.QueryDocumentSnapshot | null;
+	items: any[];
+	after: GeoQuerySnapshot | null;
+	lastLoaded: any | null;
 	loadingMore: boolean;
 	limit: number;
 	loadingMoreError: null | Error;
@@ -20,7 +24,7 @@ export type ActionType =
 	| Action<
 			'LOADED',
 			{
-				value: firestore.QuerySnapshot;
+				value: GeoQuerySnapshot;
 				limit: number;
 			}
 	  >
@@ -82,30 +86,30 @@ function reducer(state: StateType, action: ActionType): StateType {
 		case 'ERROR': {
 			return {
 				...state,
-                loadingError: action.value,
-                loading: false
+				loadingError: action.value,
+				loading: false,
 			};
 		}
 	}
 }
 
-function findIndexOfDocument(doc: firestore.QueryDocumentSnapshot, items: firestore.DocumentData[]) {
+function findIndexOfDocument(doc: any, items: any[]) {
 	return items.findIndex((item) => {
 		return item.id === doc.id;
 	});
 }
 
-function updateItem(doc: firestore.QueryDocumentSnapshot, items: firestore.DocumentData[]) {
+function updateItem(doc: any, items: any[]) {
 	const i = findIndexOfDocument(doc, items);
 	items[i] = doc;
 }
 
-function deleteItem(doc: firestore.QueryDocumentSnapshot, items: firestore.DocumentData[]) {
+function deleteItem(doc: any, items: any[]) {
 	const i = findIndexOfDocument(doc, items);
 	items.splice(i, 1);
 }
 
-function addItem(doc: firestore.QueryDocumentSnapshot, items: firestore.DocumentData[]) {
+function addItem(doc: any, items: any[]) {
 	const i = findIndexOfDocument(doc, items);
 	if (i === -1) {
 		items.push(doc);
@@ -117,24 +121,31 @@ interface PaginationOptions {
 	limit?: number;
 }
 
-export default function usePaginateQuery(query: firestore.Query, { limit = 25 }: PaginationOptions = {}) {
+export default function usePaginateQuery({ limit = 25 }: PaginationOptions = {}) {
 	const [state, dispatch] = useReducer(reducer, initialState);
 
 	// when "after" changes, we update our query
 	useEffect(() => {
-		let fn = query.limit(state.limit || limit);
-        console.log(fn, "FN")
-		let unsubscribe = fn.onSnapshot((snap) => {
-            if(snap.empty) {
-                dispatch({ type: 'ERROR', value: new Error('Oops!!!, something went wrong!!!')})
-                return;
-            }
-			dispatch({ type: 'LOADED', value: snap, limit });
-		}, function (error) {
-            console.log("wow this is something great")
-            dispatch({ type: 'ERROR', value: error})
-        });
-
+		let unsubscribe: any
+		const callQuery = async () => {
+			const coordinates = await getCurrentPosition();
+			
+			const query = geofirestore
+				.collection('users')
+				.near({ center: new firebase.firestore.GeoPoint(coordinates!.lat, coordinates!.lng), radius: 1000 })
+				.where('type', '==', 'tailor');
+			let fn = query.limit(state.limit || limit);
+			
+			unsubscribe = fn.onSnapshot(
+				(snap: GeoQuerySnapshot) => {
+					dispatch({ type: 'LOADED', value: snap, limit });
+				},
+				function (error) {
+					dispatch({ type: 'ERROR', value: error });
+				}
+			);
+		};
+		callQuery();
 		return () => unsubscribe();
 	}, [state.after]);
 

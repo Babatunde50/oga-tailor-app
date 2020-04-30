@@ -11,7 +11,7 @@ const UserProvider: React.FC = ({ children }) => {
 		const setUserData = async () => {
 			unsubscribe = await auth.onAuthStateChanged(async userAuth => {
 				if (userAuth) {
-					const userRef = await createUserProfileDocument(userAuth);
+					const userRef = await createUserProfileDocument(userAuth, null);
 					userRef!.onSnapshot(snapshot => {
 						const newUser = {
 							uid: snapshot.id,

@@ -19,30 +19,23 @@ import {
 	IonAlert,
 } from '@ionic/react';
 import { cutOutline } from 'ionicons/icons';
-import { Plugins } from '@capacitor/core';
 import debounce from 'lodash.debounce';
 
 // import distanceFrom from '../utils/distance';
 import TailorCard from '../components/TailorCard';
-// import usePagination from 'firestore-pagination-hook';
 
-import { firestore } from '../firebase';
 import usePagination from '../hooks/firestore-pagination';
-
-const { Geolocation } = Plugins;
 
 const Tailors: React.FC = () => {
 	const [tailorType, setTailorType] = useState<string>('nearYou');
 	const [searchName, setSearchName] = useState<string>('');
-	const { loading, loadingError, loadingMore, loadingMoreError, hasMore, items, loadMore } = usePagination(
-		firestore.collection('users').where('type', '==', 'tailor'),
-		{
-			limit: 3,
-		}
-	);
+	const { loading, loadingError, loadingMore, loadingMoreError, hasMore, items, loadMore } = usePagination({
+		limit: 3,
+	});
 	const [error, setError] = useState(false);
 
 	useEffect(() => {
+		console.log(loadingError?.message);
 		if (loadingError?.message && !loading) {
 			setError(true);
 		}
@@ -53,10 +46,6 @@ const Tailors: React.FC = () => {
 	};
 	const searchTailorHandler = (event: any) => {
 		setSearchName(event.detail.value);
-	};
-	const getCurrentPosition = async () => {
-		const coordinates: any = await Geolocation.getCurrentPosition();
-		return { lat: coordinates.coords.latitude, lng: coordinates.coords.longitude };
 	};
 
 	const handleScroll = debounce(async (e: any) => {
@@ -70,15 +59,11 @@ const Tailors: React.FC = () => {
 	}, 100);
 
 	const tailors = items.map(function (doc) {
-		// do some stuffs;
-		// const userCoordinate = await getCurrentPosition();
 		const tailorData = doc.data();
-		// const distance = distanceFrom([userCoordinate.lat, userCoordinate.lng], [tailorData.lat, tailorData.lng]);
-		// console.log(distance);
+		console.log(tailorData);
 		return {
 			id: doc.id,
 			...tailorData,
-			// distance,
 		};
 	});
 
