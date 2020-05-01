@@ -17,12 +17,15 @@ import {
 	IonFabButton,
 	IonSpinner,
 	IonAlert,
+	IonModal,
+	IonButton,
 } from '@ionic/react';
-import { cutOutline } from 'ionicons/icons';
+import { add } from 'ionicons/icons';
 import debounce from 'lodash.debounce';
 
 // import distanceFrom from '../utils/distance';
 import TailorCard from '../components/TailorCard';
+import NewPostModal from '../components/NewPostModal';
 
 import usePagination from '../hooks/firestore-pagination';
 
@@ -33,6 +36,7 @@ const Tailors: React.FC = () => {
 		limit: 3,
 	});
 	const [error, setError] = useState(false);
+	const [showModal, setShowModal] = useState(false);
 
 	useEffect(() => {
 		console.log(loadingError?.message);
@@ -76,10 +80,15 @@ const Tailors: React.FC = () => {
 			</IonHeader>
 			<IonContent scrollEvents={true} onIonScroll={handleScroll} style={{ overflow: 'scroll' }}>
 				<IonFab vertical="bottom" horizontal="end" slot="fixed">
-					<IonFabButton>
-						<IonIcon icon={cutOutline} />
+					<IonFabButton
+						onClick={() => {
+							setShowModal(true);
+						}}
+					>
+						<IonIcon icon={add} />
 					</IonFabButton>
 				</IonFab>
+
 				<IonSegment onIonChange={tailorTypeHandler} value={tailorType}>
 					<IonSegmentButton value="nearYou">
 						<IonLabel>Near You</IonLabel>
@@ -119,6 +128,12 @@ const Tailors: React.FC = () => {
 					header={'Error'}
 					message={loadingError?.message}
 					buttons={['OK']}
+				/>
+				<NewPostModal
+					showModal={showModal}
+					closeModal={() => {
+						setShowModal(false);
+					}}
 				/>
 			</IonContent>
 		</IonPage>

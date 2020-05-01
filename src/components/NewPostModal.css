@@ -1,0 +1,27 @@
+.post-start-container {
+	height: 80vh;
+	display: flex;
+	justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.post-start-container h1 {
+    margin-bottom: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+    font-size: 26px;
+}
+
+.img-container {
+    width: 640px;
+    height: 480px;
+    float: left;
+}
+
+.img-preview {
+    width: 200px;
+    height: 200px;
+    float: left;
+    margin-left: 10px;
+}
