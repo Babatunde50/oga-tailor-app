@@ -18,17 +18,20 @@ import {
 	IonButton,
 } from '@ionic/react';
 
-import { firestore } from '../firebase';
 import './TailorDetails.css';
+import { firestore } from '../firebase';
+
+import Designs from '../components/Designs';
+import Location from '../components/Location';
+import Reviews from '../components/Reviews';
 
 const TailorDetails: React.FC = () => {
 	const { id } = useParams();
 	const [tailor, setTailor] = useState<any>(null);
 	const [view, setView] = useState('designs');
-	const docRef = firestore.collection('users').doc(id);
-	console.log(tailor);
+	const userRef = firestore.collection('users').doc(id);
 	useEffect(() => {
-		docRef
+		userRef
 			.get()
 			.then(function (doc) {
 				if (doc.exists) {
@@ -47,6 +50,7 @@ const TailorDetails: React.FC = () => {
 				console.log('Error getting document:', error);
 			});
 	}, []);
+
 	return (
 		<IonPage>
 			<IonHeader>
@@ -85,7 +89,7 @@ const TailorDetails: React.FC = () => {
 						<IonCol>
 							<h2 className="company-name"> {tailor?.companyName} </h2>
 							<p className="display-name"> {tailor?.displayName} </p>
-							<span className="contact"> { tailor?.email} </span>
+							<span className="contact"> {tailor?.email} </span>
 							<span className="contact">{tailor?.telephone}</span>
 						</IonCol>
 					</IonRow>
@@ -101,6 +105,7 @@ const TailorDetails: React.FC = () => {
 						<IonLabel>Reviews</IonLabel>
 					</IonSegmentButton>
 				</IonSegment>
+				{view === 'designs' ? <Designs userId={id!} /> : view === 'location' ? <Location /> : <Reviews />}
 			</IonContent>
 		</IonPage>
 	);
