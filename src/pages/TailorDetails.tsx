@@ -50,7 +50,6 @@ const TailorDetails: React.FC = () => {
 				console.log('Error getting document:', error);
 			});
 	}, []);
-
 	return (
 		<IonPage>
 			<IonHeader>
@@ -105,7 +104,7 @@ const TailorDetails: React.FC = () => {
 						<IonLabel>Reviews</IonLabel>
 					</IonSegmentButton>
 				</IonSegment>
-				{view === 'designs' ? <Designs userId={id!} /> : view === 'location' ? <Location /> : <Reviews />}
+				{view === 'designs' ? <Designs userId={id!} /> : view === 'location' ? <Location coords={tailor.coordinates} /> : <Reviews />}
 			</IonContent>
 		</IonPage>
 	);

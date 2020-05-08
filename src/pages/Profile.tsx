@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import {
 	IonPage,
 	IonGrid,
@@ -63,30 +64,49 @@ const Profile: React.FC = () => {
 						</IonItem>
 					)}
 					<p className="profile-section__title">Measurements</p>
+					<IonItem detail>
+						<Link to="profile/new-measurement" className="profile__links">
+							<IonLabel> Take New Measurement </IonLabel>
+						</Link>
+					</IonItem>
+					<IonItem detail>
+						<Link to="profile/your-measurement" className="profile__links">
+							<IonLabel> Your Measurement </IonLabel>
+						</Link>
+					</IonItem>
 					{user.d && user.d.type === 'tailor' && (
-						<IonItem href="#" detail>
-							<IonLabel> Customer's Measurements</IonLabel>
+						<IonItem detail>
+							<Link to="profile/customers-measurements" className="profile__links">
+								<IonLabel> Customer's Measurements</IonLabel>
+							</Link>
 						</IonItem>
 					)}
-					<IonItem href="#" detail>
-						<IonLabel> Your Measurement </IonLabel>
-					</IonItem>
 					<p className="profile-section__title">Account Settings</p>
-					<IonItem href="#" detail>
-						<IonLabel> Account security </IonLabel>
+					<IonItem detail>
+						<Link to="profile/security" className="profile__links">
+							<IonLabel> Account security </IonLabel>
+						</Link>
 					</IonItem>
-					<IonItem href="#" detail>
-						<IonLabel> Email Notification preferences </IonLabel>
+					<IonItem detail>
+						<Link to="profile/emails" className="profile__links">
+							<IonLabel> Email Notification preferences </IonLabel>
+						</Link>
 					</IonItem>
 					<p className="profile-section__title">Support</p>
-					<IonItem href="#" detail>
-						<IonLabel> About ogaTailor </IonLabel>
+					<IonItem detail>
+						<Link to="about" className="profile__links">
+							<IonLabel> About ogaTailor </IonLabel>
+						</Link>
 					</IonItem>
-					<IonItem href="#" detail>
-						<IonLabel> Frequently asked question </IonLabel>
+					<IonItem detail>
+						<Link to="frequent-questions" className="profile__links">
+							<IonLabel> Frequently asked question </IonLabel>
+						</Link>
 					</IonItem>
-					<IonItem href="#" detail>
-						<IonLabel> Share the ogaTailor app </IonLabel>
+					<IonItem detail>
+						<Link to="share" className="profile__links">
+							<IonLabel> Share the ogaTailor app </IonLabel>
+						</Link>
 					</IonItem>
 					<IonRow>
 						<IonCol>
