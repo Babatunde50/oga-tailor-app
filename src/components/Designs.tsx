@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { firestore } from '../firebase';
-import { IonRow, IonCol, IonSpinner } from '@ionic/react';
+import { IonRow, IonCol, IonSpinner, IonIcon } from '@ionic/react';
+import { chatbubbleOutline, heartOutline, eyeOutline } from 'ionicons/icons';
+
+import './Designs.css';
 
 const Designs: React.FC<{ userId: string }> = ({ userId }) => {
 	const designRef = firestore.collection('designs');
@@ -39,20 +42,27 @@ const Designs: React.FC<{ userId: string }> = ({ userId }) => {
 	return (
 		<IonRow>
 			{designs.map((design: any) => (
-                <>
 				<IonCol key={design.id} size="4">
-					<h1> {design.story} </h1>
+					<div
+						className="design-post"
+						style={{ background: `url(${design.imageURL})`, backgroundPosition: 'center', backgroundSize: 'cover' }}
+					>
+						<IonRow className="overlay">
+							<IonCol class="col">
+								<div>
+									<IonIcon icon={eyeOutline} role="img" />
+									192
+								</div>
+								<div>
+									<IonIcon icon={heartOutline} />4
+								</div>
+								<div>
+									<IonIcon icon={chatbubbleOutline} />0
+								</div>
+							</IonCol>
+						</IonRow>
+					</div>
 				</IonCol>
-				<IonCol key={design.id} size="4">
-					<h1> {design.story} </h1>
-				</IonCol>
-				<IonCol key={design.id} size="4">
-					<h1> {design.story} </h1>
-				</IonCol>
-				<IonCol key={design.id} size="4">
-					<h1> {design.story} </h1>
-				</IonCol>
-                </>
 			))}
 		</IonRow>
 	);

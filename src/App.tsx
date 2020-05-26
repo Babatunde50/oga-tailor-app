@@ -10,6 +10,9 @@ import AuthOptions from './pages/AuthOptions';
 import Profile from './pages/Profile';
 import TailorSignUp from './pages/TailorSigUp';
 import TailorDetails from './pages/TailorDetails';
+import NewMeasurement from './pages/NewMeasurement';
+import YourMeasurement from './pages/YourMeasurement';
+import CustomersMeasurements from './pages/CustomersMeasurements';
 
 import { UserContext } from './providers/UserProvider';
 import { signOut } from './firebase';
@@ -57,6 +60,15 @@ const App: React.FC = () => {
 						</Route>
 						<PrivateRoute path="/profile" exact>
 							<Profile />
+						</PrivateRoute>
+						<PrivateRoute path="/profile/new-measurement" exact>
+							<NewMeasurement />
+						</PrivateRoute>
+						<PrivateRoute path="/profile/customers-measurements" exact>
+							<CustomersMeasurements />
+						</PrivateRoute>
+						<PrivateRoute path="/profile/your-measurement" exact>
+							<YourMeasurement />
 						</PrivateRoute>
 						<UnAuthRoute path="/auth/email" exact>
 							<Auth />

@@ -4,7 +4,7 @@ import { auth, createUserProfileDocument } from '../firebase';
 export const UserContext = createContext(null);
 
 const UserProvider: React.FC = ({ children }) => {
-	const [user, setUser] = useState();
+	const [user, setUser] = useState<null | any>(null);
 
 	useEffect(() => {
 		let unsubscribe: any
