@@ -138,6 +138,7 @@ export default function usePaginateQuery({ limit = 25 }: PaginationOptions = {})
 			
 			unsubscribe = fn.onSnapshot(
 				(snap: GeoQuerySnapshot) => {
+					console.log(snap);
 					dispatch({ type: 'LOADED', value: snap, limit });
 				},
 				function (error) {

@@ -1,6 +1,10 @@
 import React, { useState, createContext, useEffect } from 'react';
 import { auth, createUserProfileDocument } from '../firebase';
 
+type user = {
+	
+}
+
 export const UserContext = createContext(null);
 
 const UserProvider: React.FC = ({ children }) => {
