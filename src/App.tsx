@@ -41,7 +41,7 @@ const App: React.FC = () => {
 	const user = useContext(UserContext);
 	function PrivateRoute(props: any) {
 		const { children, ...rest } = props;
-		return <Route {...rest} render={({ location }) => (!!user ? children : <Redirect to="/auth" />)} />;
+		return <Route {...rest} render={({ location }) => (!!user ? children : <Redirect to="/tailors" />)} />;
 	}
 	function UnAuthRoute(props: any) {
 		const { children, ...rest } = props;
@@ -61,7 +61,7 @@ const App: React.FC = () => {
 						<PrivateRoute path="/profile" exact>
 							<Profile />
 						</PrivateRoute>
-						<PrivateRoute path="/profile/new-measurement" exact>
+						<PrivateRoute path="/profile/new-measurement/:type">
 							<NewMeasurement />
 						</PrivateRoute>
 						<PrivateRoute path="/profile/customers-measurements" exact>

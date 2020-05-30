@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom';
 import {
 	IonPage,
 	IonHeader,
@@ -15,7 +15,7 @@ import {
 	IonInput,
 } from '@ionic/react';
 
-import { firestore } from '../firebase'
+import { firestore } from '../firebase';
 import { UserContext } from '../providers/UserProvider';
 
 const inputsName = [
@@ -75,20 +75,36 @@ const pageState = {
 	name: '',
 };
 
-
 const NewMeasurement: React.FC = () => {
 	const [formState, setFormState] = useState(pageState);
-	const history = useHistory()
-	const user  = useContext(UserContext) as any
+	const [isLoading, setIsLoading] = useState(false);
+	const [measurement, setMeasurement] = useState({});
+	const history = useHistory();
+	const { type } = useParams();
+	const user = useContext(UserContext) as any;
 
+	const fetchMeasurementHandler = async () => {
+		setIsLoading(true);
+		const fetchedMeasurements: any = [];
+		try {
+			const querySnapshot = await firestore.collection('measurements').where('tailorId', '==', user.uid).get();
+			querySnapshot.forEach(function (doc) {
+				fetchedMeasurements.push({ id: doc.id, ...doc.data() });
+			});
+			setMeasurement(fetchedMeasurements);
+			setIsLoading(false);
+		} catch (err) {
+			console.log(err);
+		}
+	};
 
 	const submitMeasurementHandler = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		await firestore.collection("measurements").add({
+		await firestore.collection('measurements').add({
 			...formState,
-			tailorId: user.uid
-		})
-		history.goBack()
+			tailorId: user.uid,
+		});
+		history.goBack();
 	};
 
 	const changeInputHandler = (event: any) => {

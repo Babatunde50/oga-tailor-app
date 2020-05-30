@@ -65,15 +65,19 @@ const Profile: React.FC = () => {
 					)}
 					<p className="profile-section__title">Measurements</p>
 					<IonItem detail>
-						<Link to="profile/new-measurement" className="profile__links">
+						<Link to="profile/new-measurement/new" className="profile__links">
 							<IonLabel> Take New Measurement </IonLabel>
 						</Link>
 					</IonItem>
-					<IonItem detail>
-						<Link to="profile/your-measurement" className="profile__links">
-							<IonLabel> Your Measurement </IonLabel>
-						</Link>
-					</IonItem>
+					{
+						user.d && user.d.type !== 'tailor' && (
+							<IonItem detail>
+								<Link to="profile/your-measurement" className="profile__links">
+									<IonLabel> Your Measurement </IonLabel>
+								</Link>
+							</IonItem>
+						)
+					}
 					{user.d && user.d.type === 'tailor' && (
 						<IonItem detail>
 							<Link to="profile/customers-measurements" className="profile__links">
